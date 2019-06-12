@@ -24,7 +24,10 @@ class ViewPump private constructor(
 
     /** Store the resourceId for the layout used to inflate the View in the View tag.  */
     @get:JvmName("isStoreLayoutResId")
-    val isStoreLayoutResId: Boolean
+    val isStoreLayoutResId: Boolean,
+
+    @get:JvmName("recordViewCreatedTime")
+    val recordViewCreatedTime: Boolean
 ) {
 
   /** List that gets cleared and reused as it holds interceptors with the fallback added.  */
@@ -53,9 +56,17 @@ class ViewPump private constructor(
     /** A FallbackViewCreator used to instantiate a view via reflection when using the create() API. */
     private var reflectiveFallbackViewCreator: FallbackViewCreator? = null
 
+    /** print the view create time */
+    private var recordViewCreatedTime = true
+
     fun addInterceptor(interceptor: Interceptor) = apply {
       interceptors.add(interceptor)
     }
+
+    fun setRecordViewCreatedTime(recordViewCreatedTime: Boolean) = apply {
+      this.recordViewCreatedTime = recordViewCreatedTime
+    }
+
 
     /**
      *
@@ -136,7 +147,8 @@ class ViewPump private constructor(
           interceptors = interceptors.toList(),
           isReflection = reflection,
           isCustomViewCreation = customViewCreation,
-          isStoreLayoutResId = storeLayoutResId
+          isStoreLayoutResId = storeLayoutResId,
+          recordViewCreatedTime = recordViewCreatedTime
       )
     }
   }

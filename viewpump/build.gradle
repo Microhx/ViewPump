@@ -1,22 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'org.jetbrains.dokka-android'
 
-dokka {
-    reportUndocumented = false
-    skipDeprecated = true
-    jdkVersion = 7
-    includes = ['Module.md']
-    packageOptions {
-        prefix = "io.github.inflationx.viewpump.internal"
-        suppress = true
-    }
-    externalDocumentationLink {
-        url = new URL("https://developer.android.com/reference/")
-        packageListUrl =
-            new URL("https://developer.android.com/reference/androidx/package-list")
-    }
-}
 
 android {
     compileSdkVersion 28
@@ -25,22 +9,20 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
     }
-    lintOptions {
-        // we don't always want to use the latest version of the support library
-        disable 'GradleDependency'
-        textOutput 'stdout'
-        textReport System.getenv('CI') == 'true'
-    }
-    libraryVariants.all {
-        // TODO replace with https://issuetracker.google.com/issues/72050365 once released.
-        it.generateBuildConfigProvider.configure {
-            it.enabled = false
+
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    variantFilter { variant ->
-        if (variant.buildType.name == 'debug') {
-            variant.setIgnore(true)
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -56,5 +38,3 @@ dependencies {
     testImplementation 'androidx.annotation:annotation:1.0.2'
     testImplementation 'androidx.test:runner:1.1.1'
 }
-
-apply plugin: 'com.vanniktech.maven.publish'
