@@ -90,7 +90,9 @@ protected void attachBaseContext(Context newBase) {
 
 ### record the view created time
 we record the view created time by default, just like this page:
-<img src='/document/view_record_time.png' /><br/>
+<img src='/document/view_record_time.png' />
+<br/>
+
 if you want to stop this record, just set :
 
 ```java
@@ -98,7 +100,8 @@ ViewPump.init(ViewPump.builder()
             .setRecordViewCreatedTime(false)
             .build());
 ```
-this setting will taking effect in <a href='/viewpump/src/main/java/io/github/inflationx/viewpump/internal/-FallbackViewCreationInterceptor.kt'>FallbackViewCreationInterceptor</a>
+this setting will taking effect in <a href='https://github.com/Microhx/ViewPump/blob/4292cb14eaffc189dd849b1c00b8119624dc1ead/viewpump/src/main/java/io/github/inflationx/viewpump/internal/-FallbackViewCreationInterceptor.kt'>
+FallbackViewCreationInterceptor</a>
 
 ```kotlin
 
