@@ -88,6 +88,47 @@ protected void attachBaseContext(Context newBase) {
 }
 ```
 
+### record the view created time
+we record the view created time by default, just like this page:
+<img src='/document/view_record_time.png' />
+if you want to stop this record, just set :
+
+```java
+ViewPump.init(ViewPump.builder()
+            .setRecordViewCreatedTime(false)
+            .build());
+```
+this setting will taking effect in <a href=''>FallbackViewCreationInterceptor</a>
+
+```kotlin
+
+override fun intercept(chain: Chain): InflateResult {
+  val request = chain.request()
+  val viewCreator = request.fallbackViewCreator
+  val fallbackView =
+
+  if(ViewPump.get().recordViewCreatedTime) {
+
+    val startTime = System.currentTimeMillis()
+    val onCreateView = viewCreator.onCreateView(request.parent, request.name, request.context, request.attrs)
+    val endTime = System.currentTimeMillis();
+
+    onCreateView?.apply {
+      if(this.id > 0) {
+        val entryName = request.context.resources.getResourceEntryName(this.id)
+        Log.d("createViewTime","${request.name}[$entryName] created cost ${endTime - startTime} + ms")
+      }
+    }
+
+    onCreateView
+
+  }else {
+
+    viewCreator.onCreateView(request.parent, request.name, request.context, request.attrs)
+  }
+  
+```
+
 _You're good to go!_
 
 To see more ideas for potential use cases, check out the [Recipes](https://github.com/InflationX/ViewPump/wiki/Recipes) wiki page.
